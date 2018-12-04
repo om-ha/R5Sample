@@ -4,13 +4,13 @@ import R5Streaming
 class LiveR5PublisherViewController: R5VideoViewController {
     
     // MARK: Dimensions
-    #if DEBUG
+//    #if DEBUG
     static let streamWidth: Int32 = 854
     static let streamHeight: Int32 = 480
-    #else
-    static let streamWidth: Int32 = 1280
-    static let streamHeight: Int32 = 720
-    #endif
+//    #else
+//    static let streamWidth: Int32 = 1280
+//    static let streamHeight: Int32 = 720
+//    #endif
     
     // MARK: R5 Attributes
     var controller : R5AdaptiveBitrateController? = nil
@@ -20,7 +20,7 @@ class LiveR5PublisherViewController: R5VideoViewController {
     var captureDevicePosition: AVCaptureDevicePosition?
     
     // MARK: Live Session Local Recording Attributes
-    let isSaveLiveAutosaveOn = false
+    var isSaveLiveAutosaveOn = false
     var localFileName: String {
         let df = DateFormatter()
         df.dateFormat = "yyyyMMddHHmmss"
@@ -109,6 +109,7 @@ extension LiveR5PublisherViewController {
         config.contextName = UserDefaults.standard.object(forKey: MainViewController.kContextName) as? String ?? ""
         config.licenseKey = UserDefaults.standard.object(forKey: MainViewController.kLicense) as? String ?? ""
         streamName = UserDefaults.standard.object(forKey: MainViewController.kStreamName) as? String ?? ""
+        isSaveLiveAutosaveOn = UserDefaults.standard.object(forKey: MainViewController.kLocalRecord) as? Bool ?? false
         preview()
     }
     
@@ -116,11 +117,11 @@ extension LiveR5PublisherViewController {
         // Attach the video from camera to stream
         let cameraDevice : AVCaptureDevice? = getCameraWithPosition(captureDevicePosition ?? AVCaptureDevicePosition.front)
         var camera: R5Camera?
-        #if DEBUG
+//        #if DEBUG
         camera = R5Camera(device: cameraDevice, andBitRate: 1000)/*for 480p: recommended 1000 https://red5pro.zendesk.com/hc/en-us/articles/235679488-Suggested-Resolution-and-Birate-Settings*/
-        #else
-        camera = R5Camera(device: cameraDevice, andBitRate: 2500)/*for 720p: recommended 2500 https://red5pro.zendesk.com/hc/en-us/articles/235679488-Suggested-Resolution-and-Birate-Settings*/
-        #endif
+//        #else
+//        camera = R5Camera(device: cameraDevice, andBitRate: 2500)/*for 720p: recommended 2500 https://red5pro.zendesk.com/hc/en-us/articles/235679488-Suggested-Resolution-and-Birate-Settings*/
+//        #endif
         // Notes: this should be done before publishing starts only
         // Setup the rotation of the video stream.  This is meta data, and is used by the client to rotate the video.  No rotation is done on the publisher.
         camera?.orientation = 90
